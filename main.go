@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/arthurmaury/telosys-go-cli/cmd"
+import "github.com/arthurmaury/go-cli/cmd"
 
 func main() {
 	cmd.Execute()

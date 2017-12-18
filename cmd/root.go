@@ -25,9 +25,9 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "telosys-go-cli",
-	Short: "Telosys is a code generator",
-	Long:  "Telosys is a code generator",
+	Use:   "go-cli",
+	Short: "A simple cli",
+	Long:  "A simple cli",
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) {},
