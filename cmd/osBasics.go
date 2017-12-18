@@ -15,6 +15,7 @@
 package cmd
 
 import (
+	"os"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -26,12 +27,28 @@ var pwdCmd = &cobra.Command{
 	Short: "Print Working Directory",
 	Long: "Print the current working directory",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("pwd called")
+		fmt.Println(os.Getwd())
+	},
+}
+
+// envCmd represents the env command
+var envCmd = &cobra.Command{
+	Use:   "env [variable]",
+	Short: "Get environment variable",
+	Long: "Print an environment variable value",
+	Args: cobra.MinimumNArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		for _, value := range args {
+			fmt.Println(value, ": ", os.Getenv(value))
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(pwdCmd)
+
+	// envCmd.Flags().StringVarP(&env_variable, "variable", "v", "HOME", "Environment variable to print")
+	rootCmd.AddCommand(envCmd)
 
 	// Here you will define your flags and configuration settings.
 
