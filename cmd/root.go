@@ -59,27 +59,49 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
+	// TODO do that only once
 	permanentViper.SetConfigName("cli_config")
 	permanentViper.AddConfigPath(".")
-	// viper.SetConfigName(".testeur")
+	getCustomConfig()
 
-	permanentViper.AutomaticEnv() // read in environment variables that match
+	// TODO fix viper watch
+
+	// err := permanentViper.ReadInConfig()
+	// check(err)
+
+	// permanentViper.WatchConfig()
+	// fmt.Println("WATCHING")
+	// permanentViper.OnConfigChange(func(e fsnotify.Event) {
+	// 	fmt.Println("HERE")
+	// 	fmt.Println("Saving config")
+	// 	permanentViper.WriteConfig()
+	// 	getCustomConfig()
+	// })
+	// getCustomConfig()
 
 	// If a config file is found, read it in.
-	getCustomConfig()
 }
 
 func getCustomConfig() {
-	if err := permanentViper.ReadInConfig(); err == nil {
-		configPath := permanentViper.GetString("configPath")
-		configName := permanentViper.GetString("configName")
-		// TODO if not exist
-		customViper.SetConfigName(configName)
-		customViper.AddConfigPath(configPath)
-		if err := customViper.ReadInConfig(); err != nil {
-			fmt.Println(err)
+	err := permanentViper.ReadInConfig()
+	check(err)
+
+	configPaths := permanentViper.GetStringSlice("configpaths")
+	configName := permanentViper.GetString("configname")
+	// TODO if not exist
+	customViper.SetConfigName(configName)
+	for _, path := range configPaths {
+		customViper.AddConfigPath(path)
+	}
+	err = customViper.ReadInConfig()
+	check(err)
+}
+
+func check(e error) {
+	if e != nil {
+		if _, ok := e.(viper.ConfigFileNotFoundError); ok {
+			fmt.Println("----------- Not Found Error")
 		}
-	} else {
-		fmt.Println(err)
+		fmt.Println(e)
 	}
 }

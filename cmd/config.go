@@ -24,13 +24,20 @@ import (
 var configCmd = &cobra.Command{
 	Use:   "config",
 	Short: "set config file or path",
-	Long: "set config file or path",
+	Long:  "set config file or path",
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) < 1 {
-			if err := customViper.ReadInConfig(); err == nil {
-				fmt.Println("Using config file:", customViper.ConfigFileUsed())
-			} else {
-				fmt.Println(err)
+		if len(args) == 0 {
+			fmt.Println("Config file:", customViper.ConfigFileUsed())
+			for key, value := range customViper.AllSettings() {
+				fmt.Println(key, ":", value)
+			}
+		} else {
+			for _, entry := range args {
+				if value := customViper.Get(entry); value != nil {
+					fmt.Println(entry, ":", customViper.Get(entry))
+				} else {
+					fmt.Println("L'entrée", entry, "n'existe pas dans le fichier de configuration")
+				}
 			}
 		}
 	},

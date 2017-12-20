@@ -1,3 +1,4 @@
-author: Arthur Maury
 configname: config1
-configpath: configDir
+configpaths:
+- ./configDir
+- configDir2

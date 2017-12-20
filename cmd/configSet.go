@@ -26,12 +26,12 @@ var configSetCmd = &cobra.Command{
 	Short: "Sets config file",
 	Long: "Sets the path and name of the config file",
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 0 {
+		if len(args) >= 0 {
 			if name != "" {
-				permanentViper.Set("configName", name)
+				permanentViper.Set("configname", name)
 			}
 			if path != "" {
-				permanentViper.Set("configPath", path)
+				permanentViper.Set("configpaths", append(permanentViper.GetStringSlice("configPaths"), path))
 			}
 			permanentViper.WriteConfig()
 			getCustomConfig()
@@ -59,9 +59,7 @@ func init() {
 }
 
 func showConfig() {
-	if err := customViper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", customViper.ConfigFileUsed())
-	} else {
-		fmt.Println(err)
-	}
+	err := customViper.ReadInConfig()
+	check(err)
+	fmt.Println("Using config file:", customViper.ConfigFileUsed())
 }
