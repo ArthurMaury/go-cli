@@ -20,32 +20,32 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// configCmd represents the config command
-var configCmd = &cobra.Command{
-	Use:   "config",
-	Short: "set config file or path",
-	Long: "set config file or path",
+// configReadCmd represents the configRead command
+var configReadCmd = &cobra.Command{
+	Use:   "read",
+	Short: "Read value of config entry",
+	Long: "Reads the value of a config entry",
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) < 1 {
-			if err := customViper.ReadInConfig(); err == nil {
-				fmt.Println("Using config file:", customViper.ConfigFileUsed())
-			} else {
-				fmt.Println(err)
+		if err := customViper.ReadInConfig(); err == nil {
+			for _, entry := range args {
+				fmt.Println(entry, ":", customViper.GetString(entry))
 			}
+		} else {
+			fmt.Println(err)
 		}
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(configCmd)
+	configCmd.AddCommand(configReadCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// configCmd.PersistentFlags().String("path", "p", "Add a path to a config directory")
+	// configReadCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// configCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// configReadCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
