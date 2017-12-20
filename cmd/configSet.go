@@ -26,18 +26,22 @@ var configSetCmd = &cobra.Command{
 	Short: "Sets config file",
 	Long: "Sets the path and name of the config file",
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 1 {
-			permanentViper.Set("configName", args[0])
+		if len(args) == 0 {
+			if name != "" {
+				permanentViper.Set("configName", name)
+			}
+			if path != "" {
+				permanentViper.Set("configPath", path)
+			}
 			permanentViper.WriteConfig()
 			getCustomConfig()
-			if err := customViper.ReadInConfig(); err == nil {
-				fmt.Println("Using config file:", customViper.ConfigFileUsed())
-			} else {
-				fmt.Println(err)
-			}
+			showConfig()
 		}
 	},
 }
+
+var name string
+var path string
 
 func init() {
 	configCmd.AddCommand(configSetCmd)
@@ -46,9 +50,18 @@ func init() {
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// configSetCmd.PersistentFlags().String("name", "n", "Set the config file name")
+	configSetCmd.PersistentFlags().StringVarP(&name, "name", "n", "", "Set the config file name")
+	configSetCmd.PersistentFlags().StringVarP(&path, "path", "p", "", "Add a config file path")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// configSetCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func showConfig() {
+	if err := customViper.ReadInConfig(); err == nil {
+		fmt.Println("Using config file:", customViper.ConfigFileUsed())
+	} else {
+		fmt.Println(err)
+	}
 }
