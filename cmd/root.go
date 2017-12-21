@@ -72,7 +72,6 @@ func initConfig() {
 	// permanentViper.WatchConfig()
 	// fmt.Println("WATCHING")
 	// permanentViper.OnConfigChange(func(e fsnotify.Event) {
-	// 	fmt.Println("HERE")
 	// 	fmt.Println("Saving config")
 	// 	permanentViper.WriteConfig()
 	// 	getCustomConfig()

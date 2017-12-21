@@ -1,4 +1,4 @@
 configname: config1
 configpaths:
-- ./configDir
+- configDir
 - configDir2

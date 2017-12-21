@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+
 )
 
 // configSetCmd represents the configSet command
@@ -26,22 +27,20 @@ var configSetCmd = &cobra.Command{
 	Short: "Sets config file",
 	Long: "Sets the path and name of the config file",
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) >= 0 {
-			if name != "" {
-				permanentViper.Set("configname", name)
-			}
-			if path != "" {
-				permanentViper.Set("configpaths", append(permanentViper.GetStringSlice("configPaths"), path))
-			}
-			permanentViper.WriteConfig()
-			getCustomConfig()
-			showConfig()
+		if path != "" {
+			permanentViper.Set("configpaths", append(permanentViper.GetStringSlice("configPaths"), path))
 		}
+		if len(args) == 1 {
+			permanentViper.Set("configname", args[0])
+		}
+
+		permanentViper.WriteConfig()
+		getCustomConfig()
+		showConfig()
 	},
 }
 
-var name string
-var path string
+var name, path string
 
 func init() {
 	configCmd.AddCommand(configSetCmd)
@@ -51,7 +50,8 @@ func init() {
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	configSetCmd.PersistentFlags().StringVarP(&name, "name", "n", "", "Set the config file name")
-	configSetCmd.PersistentFlags().StringVarP(&path, "path", "p", "", "Add a config file path")
+	configSetCmd.PersistentFlags().StringVarP(&path, "path", "p", "", "Set the config file path")
+	permanentViper.BindPFlag("configName", configSetCmd.PersistentFlags().Lookup("name"))
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
