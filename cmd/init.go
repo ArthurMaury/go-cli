@@ -27,17 +27,20 @@ var initCmd = &cobra.Command{
 	Short: "Initialize the config files",
 	Long:  `Creates the cli_config file `,
 	Run: func(cmd *cobra.Command, args []string) {
-		_, err := os.Create(cliConfigName + ".yaml")
+		os.MkdirAll(cliConfigPath, 0777)
+		_, err := os.Create(cliConfigPath + "/" + cliConfigName + ".yaml")
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("creation:", err)
 		}
 		fmt.Print("config file path: ")
 		path, _ := readClean()
 		permanentViper.Set("configpaths", []string{path})
 		fmt.Print("config file name: ")
 		name, _ := readClean()
+
 		permanentViper.Set("configname", name)
 		permanentViper.WriteConfig()
+		fmt.Println("go-cli successfully initialized")
 		getCustomConfig()
 		showConfig()
 	},

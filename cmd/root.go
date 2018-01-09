@@ -17,7 +17,10 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"os/user"
+	"strings"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -35,8 +38,8 @@ var rootCmd = &cobra.Command{
 var permanentViper = viper.New()
 var customViper = viper.New()
 
-const cliConfigName = "cli_config"
-const cliConfigPath = "."
+var cliConfigName string
+var cliConfigPath string
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
@@ -62,8 +65,12 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	permanentViper.SetConfigName("cli_config")
-	permanentViper.AddConfigPath(".")
+	cliConfigName = "cli_config"
+	usr, _ := user.Current()
+	home := strings.Replace(usr.HomeDir, "\\", "/", -1)
+	cliConfigPath = home + "/.go-cli"
+	permanentViper.SetConfigName(cliConfigName)
+	permanentViper.AddConfigPath(cliConfigPath)
 
 	// TODO fix viper watch
 
@@ -96,11 +103,15 @@ func getCustomConfig() {
 	check(err)
 }
 
+var yellow = color.New(color.FgYellow).SprintFunc()
+var green = color.New(color.FgGreen).SprintFunc()
+
 func check(e error) {
 	if e != nil {
 		if _, ok := e.(viper.ConfigFileNotFoundError); ok {
-			fmt.Println("----------- Not Found Error")
+			fmt.Println("It seems the go cli was not initialized\n" +
+				"Please run " + yellow("go-cli init") + " to create the config files")
+			os.Exit(0)
 		}
-		fmt.Println(e)
 	}
 }

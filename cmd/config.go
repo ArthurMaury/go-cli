@@ -54,3 +54,14 @@ func init() {
 	// is called directly, e.g.:
 	// configCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
+
+
+func showConfig() {
+	err := customViper.ReadInConfig()
+	check(err)
+
+	fmt.Println("Using config file:", customViper.ConfigFileUsed())
+	for key, value := range customViper.AllSettings() {
+		fmt.Println(green(key), ":", value)
+	}
+}

@@ -15,17 +15,14 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
-
 )
 
 // configSetCmd represents the configSet command
 var configSetCmd = &cobra.Command{
 	Use:   "set",
 	Short: "Sets config file",
-	Long: "Sets the path and name of the config file",
+	Long:  "Sets the path and name of the config file",
 	Run: func(cmd *cobra.Command, args []string) {
 		getCustomConfig()
 		if path != "" {
@@ -57,14 +54,4 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// configSetCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-}
-
-func showConfig() {
-	err := customViper.ReadInConfig()
-	check(err)
-	
-	fmt.Println("Using config file:", customViper.ConfigFileUsed())
-	for key, value := range customViper.AllSettings() {
-		fmt.Println(key, ":", value)
-	}
 }
