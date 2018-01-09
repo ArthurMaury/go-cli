@@ -1,4 +1,4 @@
-// Copyright © 2017 NAME HERE <EMAIL ADDRESS>
+// Copyright © 2018 NAME HERE <EMAIL ADDRESS>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,41 +16,43 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 )
 
-// configCmd represents the config command
-var configCmd = &cobra.Command{
-	Use:   "config",
-	Short: "set config file or path",
-	Long:  "set config file or path",
+// initCmd represents the init command
+var initCmd = &cobra.Command{
+	Use:   "init",
+	Short: "Initialize the config files",
+	Long:  `Creates the cli_config file `,
 	Run: func(cmd *cobra.Command, args []string) {
-		getCustomConfig()
-		if len(args) == 0 {
-			showConfig()
-		} else {
-			for _, entry := range args {
-				if value := customViper.Get(entry); value != nil {
-					fmt.Println(entry, ":", customViper.Get(entry))
-				} else {
-					fmt.Println("L'entrée", entry, "n'existe pas dans le fichier de configuration")
-				}
-			}
+		_, err := os.Create(cliConfigName + ".yaml")
+		if err != nil {
+			fmt.Println(err)
 		}
+		fmt.Print("config file path: ")
+		path, _ := readClean()
+		permanentViper.Set("configpaths", []string{path})
+		fmt.Print("config file name: ")
+		name, _ := readClean()
+		permanentViper.Set("configname", name)
+		permanentViper.WriteConfig()
+		getCustomConfig()
+		showConfig()
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(configCmd)
+	rootCmd.AddCommand(initCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// configCmd.PersistentFlags().String("path", "p", "Add a path to a config directory")
+	// initCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// configCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

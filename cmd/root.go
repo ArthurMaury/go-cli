@@ -35,6 +35,9 @@ var rootCmd = &cobra.Command{
 var permanentViper = viper.New()
 var customViper = viper.New()
 
+const cliConfigName = "cli_config"
+const cliConfigPath = "."
+
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
@@ -59,10 +62,8 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	// TODO do that only once
 	permanentViper.SetConfigName("cli_config")
 	permanentViper.AddConfigPath(".")
-	getCustomConfig()
 
 	// TODO fix viper watch
 
@@ -78,7 +79,6 @@ func initConfig() {
 	// })
 	// getCustomConfig()
 
-	// If a config file is found, read it in.
 }
 
 func getCustomConfig() {
