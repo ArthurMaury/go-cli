@@ -23,8 +23,8 @@ import (
 // configCmd represents the config command
 var configCmd = &cobra.Command{
 	Use:   "config",
-	Short: "set config file or path",
-	Long:  "set config file or path",
+	Short: "Manage the config files or path",
+	Long:  "Manage the config files or path",
 	Run: func(cmd *cobra.Command, args []string) {
 		getCustomConfig()
 		if len(args) == 0 {
@@ -43,18 +43,7 @@ var configCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(configCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// configCmd.PersistentFlags().String("path", "p", "Add a path to a config directory")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// configCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
-
 
 func showConfig() {
 	err := customViper.ReadInConfig()

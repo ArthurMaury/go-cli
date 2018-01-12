@@ -20,7 +20,6 @@ import (
 	"os/user"
 	"strings"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -102,9 +101,6 @@ func getCustomConfig() {
 	err = customViper.ReadInConfig()
 	check(err)
 }
-
-var yellow = color.New(color.FgYellow).SprintFunc()
-var green = color.New(color.FgGreen).SprintFunc()
 
 func check(e error) {
 	if e != nil {

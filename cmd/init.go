@@ -19,6 +19,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // initCmd represents the init command
@@ -27,19 +28,21 @@ var initCmd = &cobra.Command{
 	Short: "Initialize the config files",
 	Long:  `Creates the cli_config file `,
 	Run: func(cmd *cobra.Command, args []string) {
+		//Creates the HOME/.go-cli directory if it doesn't exist
 		os.MkdirAll(cliConfigPath, 0777)
-		_, err := os.Create(cliConfigPath + "/" + cliConfigName + ".yaml")
+		//Creates the cli_config file
+		err := permanentViper.ReadInConfig()
 		if err != nil {
-			fmt.Println("creation:", err)
+			if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+				os.Create(cliConfigPath + "/" + cliConfigName + ".yaml")
+			}
 		}
-		fmt.Print("config file path: ")
-		path, _ := readClean()
-		permanentViper.Set("configpaths", []string{path})
-		fmt.Print("config file name: ")
-		name, _ := readClean()
+		if permanentViper.GetStringSlice("configpaths") == nil {
+			permanentViper.Set("configpaths", []string{})
+		}
 
-		permanentViper.Set("configname", name)
-		permanentViper.WriteConfig()
+		newConfigFile()
+
 		fmt.Println("go-cli successfully initialized")
 		getCustomConfig()
 		showConfig()
